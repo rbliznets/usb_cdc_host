@@ -184,6 +184,9 @@ void CUsbCDCHost::run()
 #ifndef CONFIG_FREERTOS_CHECK_STACKOVERFLOW_NONE
     UBaseType_t m1 = uxTaskGetStackHighWaterMark2(nullptr); // Get initial stack high water mark
 #endif
+#if CONFIG_PM_ENABLE
+    ESP_ERROR_CHECK(esp_pm_lock_acquire(mPMLock));
+#endif
     STaskMessage msg;
 
     // Install USB Host driver. Should only be called once in entire application
@@ -343,6 +346,9 @@ endUsbHostTask:                              // Cleanup section
             break;
         }
     }
+#if CONFIG_PM_ENABLE
+    esp_pm_lock_release(mPMLock);      // Release power management lock
+#endif
 }
 
 void CUsbCDCHost::connectDone(CdcAcmDevice *vcp)
