@@ -57,11 +57,7 @@ CUsbCDCHost::~CUsbCDCHost()
     {
         vTaskDelay(1); // Delay 1 tick to allow task to process the command
     }
-#if (INCLUDE_vTaskDelete == 1)
-    while (mTaskHandle != nullptr); // Wait until task handle is nullified
-#else
     while (mTaskQueue != nullptr); // Wait until task queue is nullified
-#endif
 #if CONFIG_PM_ENABLE
     esp_pm_lock_delete(mPMLock); // Delete power management lock
 #endif
