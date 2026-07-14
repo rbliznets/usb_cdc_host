@@ -322,12 +322,13 @@ void CUsbCDCHost::run()
     }
 endUsbHostTask:                              // Cleanup section
     esp_err_t er = cdc_acm_host_uninstall(); // Uninstall CDC-ACM host driver
-    int count = 10;                          // Counter for waiting
-    // Wait for USB library task to exit or timeout
-    while ((mExit != 3) && (count > 0))
+    // Wait (unbounded) for usb_lib_task to actually exit: it holds a raw
+    // pointer to this object and writes to it right before self-deleting,
+    // so run() must not return - letting the object be destroyed - until
+    // that write has already happened.
+    while (mExit != 3)
     {
         vTaskDelay(10); // Delay 10 ticks
-        count--;        // Decrement counter
     }
     er |= usb_host_uninstall();            // Uninstall USB host driver
     ESP_LOGI(TAG, "usb host exit %d", er); // Log exit status
