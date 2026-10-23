@@ -2,7 +2,10 @@ version: "0.0.1"
 description: usb cdc host 
 url: https://github.com/rbliznets/usb_cdc_host
 dependencies:
-  espressif/usb_host_cdc_acm: '>=2.4.0'
+  # public: CUsbCDCHost.h подключает usb/usb_host.h и usb/cdc_acm_host.h
+  espressif/usb_host_cdc_acm:
+    version: '>=2.4.0'
+    public: true
   espressif/usb_host_ch34x_vcp: ">=2.2.1"
   espressif/usb_host_cp210x_vcp: ">=2.2.0"
   espressif/usb_host_ftdi_vcp: ">=2.1.1"
